@@ -2,6 +2,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import router from '../router'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -9,9 +10,18 @@ export default new Vuex.Store({
     jwtToken: '',
     username: '',
     password: '',
-    cpassword: ''
+    cpassword: '',
+    register_username: '',
+    register_password: '',
+    register_name: '',
+    register_cpassword: '',
+    path: '',
+    medicineList: []
   },
   getters: {
+    getPath (state) {
+      return state.path
+    },
     getJwtToken (state) {
       return state.jwtToken
     },
@@ -23,9 +33,27 @@ export default new Vuex.Store({
     },
     getCPassword (state) {
       return state.cpassword
+    },
+    getRegUser (state) {
+      return state.register_username
+    },
+    getRegPassword (state) {
+      return state.register_password
+    },
+    getRegName (state) {
+      return state.register_name
+    },
+    getRegCPassword (state) {
+      return state.register_cpassword
+    },
+    getMedicineList (state) {
+      return state.medicineList
     }
   },
   mutations: {
+    setPath (state, value) {
+      state.path = value
+    },
     setToken (state, value) {
       state.jwtToken = value
     },
@@ -37,15 +65,30 @@ export default new Vuex.Store({
     },
     setCPassword (state, value) {
       state.cpassword = value
+    },
+    setRegUser (state, value) {
+      state.register_username = value
+    },
+    setRegPassword (state, value) {
+      state.register_password = value
+    },
+    setRegName (state, value) {
+      state.register_name = value
+    },
+    setRegCPassword (state, value) {
+      state.register_cpassword = value
+    },
+    setMedicineList (state, value) {
+      state.medicineList = value
     }
   },
   actions: {
-    setJwtTokenAction ({ commit }, obj) {
+    setJwtTokenAction ({ commit, state }, obj) {
       commit('setJwtToken', obj.jwtToken)
       const axiosConfig = {
-        url: '/login',
+        url: '/login-as-' + state.path,
         method: 'Post',
-        BASE_URL: 'http://10.177.68.30:8080/',
+        baseURL: `http://10.177.68.30:${state.path === 'employee' ? '8081' : '8080'}/`,
         data: {
           username: this.state.username,
           password: this.state.password
@@ -57,11 +100,11 @@ export default new Vuex.Store({
         })
         .catch((e) => console.log(e))
     },
-    login ({ commit }, obj) {
+    login ({ commit, state }, obj) {
       const axiosConfig = {
-        url: '/login',
+        url: '/login-as-' + state.path,
         method: 'Post',
-        baseURL: 'http://10.177.68.30:8080/',
+        baseURL: `http://10.177.68.30:${state.path === 'employee' ? '8080' : '8081'}/`,
         data: {
           username: obj.username,
           password: obj.password
@@ -73,8 +116,26 @@ export default new Vuex.Store({
           const jwt = e.data.jwt
           commit('setJwtToken', obj.jwtToken)
           localStorage.setItem('JWT_TOKEN', jwt)
+          router.push(`/${state.path}`)
         })
-        .catch((e) => console.log('No accesss'))
+        .catch((e) => router.push('/error'))
+    },
+    setPathAction ({ commit }, value) {
+      commit('setPath', value)
+    },
+    setMedicineObjAction ({ commit }, value) {
+      commit('setMedicineObj', value)
+      const axiosConfig = {
+        baseURL: 'http://10.177.68.40:8080/',
+        url: '/medicine/getMedicine',
+        method: 'get'
+      }
+      axios(axiosConfig)
+        .then(e => console.log(e))
+        .catch(e => console.log(e))
+    },
+    setMedicineListAction ({ commit }, value) {
+      commit('setMedicineList', value)
     }
   }
 })

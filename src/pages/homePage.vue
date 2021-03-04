@@ -11,14 +11,13 @@
           <li><input type="text" placeholder="Username" v-model="username"></li>
           <li><input type="password" placeholder="Password" v-model="password"></li>
           <li><input type="password" placeholder="Confirm Password" v-model="cpassword"></li>
-          <ul type="none">
-              <li>
-                  <input type="radio" id="Admin" v-model="Adm" value="Admin" name="adm"><label for="Admin">Admin</label>
-              </li>
-              <li>
-                  <input type="radio" id="Employee" v-model="Adm" value="Employee" name="adm"><label for="Employee">Employee</label>
-              </li>
-          </ul>
+         <div class="dropdown">
+              <select id = "mySelect" @change="changeUrl" >
+                <option>Select User role</option>
+                <option value="admin">Admin</option>
+                <option value="employee">Employee</option>
+              </select>
+          </div>
           <button class="btn4" v-on:click="onsubmit()">Login</button>
         </ul>
        </div>
@@ -33,13 +32,18 @@ export default {
       username: '',
       password: '',
       cpassword: '',
-      Adm: ''
+      Adm: '',
+      path: ''
     }
   },
   computed: {
     ...mapGetters(['getUsername', 'getPassword'])
   },
   methods: {
+    changeUrl () {
+      var x = document.getElementById('mySelect')
+      this.path = x.value
+    },
     validate () {
       if (this.password !== this.cpassword) {
         console.log('diff pass')
@@ -50,14 +54,13 @@ export default {
       }
     },
     onsubmit () {
+      this.$store.dispatch('setPathAction', this.path)
       if (this.validate()) {
         this.$store.dispatch('login', {
           username: this.username,
           password: this.password
         })
       }
-      if (this.Adm === 'Admin') this.$router.push('/admin')
-      else this.$router.push('/employee')
       console.log(this.$store.getUsername)
       console.log(this.$store.getPassword)
     }

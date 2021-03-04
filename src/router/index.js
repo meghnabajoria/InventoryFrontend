@@ -18,14 +18,21 @@ const routes = [
     component: register
   },
   {
-    path: '/',
-    mane: '/homePage',
+    path: '',
+    mane: '/login-as',
     component: homePage
   },
   {
     path: '/admin',
     name: 'admin',
     component: admin
+    // beforeEnter: (to, from, next) => {
+    //   if (store.state.authenticated == false) {
+    //     next(false)
+    //   } else {
+    //     next()
+    //   }
+    // }
   },
   {
     path: '/employee',
@@ -33,24 +40,28 @@ const routes = [
     component: employee
   },
   {
-    path: '/manageOrder',
+    path: '/manage-order',
     name: 'manageOrder',
     component: manageOrder
   },
   {
-    path: '/manageInventory',
+    path: '/manage-inventory',
     name: 'manageInventory',
     component: manageInventory
   },
   {
-    path: '/manageEmployee',
+    path: '/manage-employee',
     name: 'manageEmployee',
     component: manageEmployee
   },
   {
-    path: '/viewInventory',
+    path: '/view-inventory',
     name: 'viewInventory',
     component: viewInventory
+  },
+  {
+    path: '*',
+    name: ''
   }
 ]
 
@@ -59,5 +70,4 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-
 export default router

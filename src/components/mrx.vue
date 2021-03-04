@@ -6,9 +6,9 @@
     <!-- <a href="#">Manage Inventory</a>
     <a href="#">Manage Employees</a>
     <a href="#">Manage Order</a> -->
-    <router-link to="/manageInventory/">Manage Inventory</router-link>
-    <router-link to="/manageEmployees/">Manage Employees</router-link>
-    <router-link to="/manageOrder/">Manage Order</router-link>
+    <router-link to="/manage-inventory/">Manage Inventory</router-link>
+    <router-link to="/manage-employees/">Manage Employees</router-link>
+    <router-link to="/manage-order/">Manage Order</router-link>
   </div>
 </div>
 </div>
